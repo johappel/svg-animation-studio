@@ -1,0 +1,9 @@
+node_modules/
+.vite/
+.pnpm/
+.vite-temp/
+.turbo/
+dist/
+package-lock.json
+pnpm-lock.yaml
+yarn.lock
