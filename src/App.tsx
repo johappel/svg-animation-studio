@@ -42,7 +42,7 @@ import {
   CookieProp
 } from "./components/SnoopyAssets";
 import { SvgDropZone } from "./components/SvgDropZone";
-import { saveCustomAssetToDB } from "./utils/db";
+import { getCustomAssetsFromDB, saveCustomAssetToDB } from "./utils/db";
 
 import {
   Project,
@@ -60,6 +60,25 @@ import {
 } from "./utils/presets";
 
 import { audioSynth } from "./utils/audioSynth";
+
+const extractSvgInnerMarkup = (svgContent: string) => {
+  const svgMatch = svgContent.trim().match(/<svg\b[^>]*>([\s\S]*?)<\/svg>/i);
+  return (svgMatch?.[1] || svgContent).trim();
+};
+
+const mergeCustomAssets = (projectAssets: Project["custom_assets"], dbAssets: Project["custom_assets"]) => {
+  const mergedAssets = [...(projectAssets || [])];
+  const knownIds = new Set(mergedAssets.map((asset) => asset.id));
+
+  for (const asset of dbAssets || []) {
+    if (!knownIds.has(asset.id)) {
+      mergedAssets.push(asset);
+      knownIds.add(asset.id);
+    }
+  }
+
+  return mergedAssets;
+};
 
 export default function App() {
   // --- Project State ---
@@ -118,6 +137,26 @@ export default function App() {
       }
     }
   }, [activeSceneId, activeScene]);
+
+  useEffect(() => {
+    let isCancelled = false;
+
+    const hydrateCustomAssets = async () => {
+      const storedAssets = await getCustomAssetsFromDB();
+      if (isCancelled || storedAssets.length === 0) return;
+
+      setProject((prev) => ({
+        ...prev,
+        custom_assets: mergeCustomAssets(prev.custom_assets, storedAssets),
+      }));
+    };
+
+    void hydrateCustomAssets();
+
+    return () => {
+      isCancelled = true;
+    };
+  }, []);
 
   // Sync Audio Synthesizer Loop
   useEffect(() => {
@@ -1415,7 +1454,7 @@ export default function App() {
                   
                   const customBg = project.custom_assets?.find(a => a.id === activeScene.background_id && a.type === "background");
                   if (customBg) {
-                    return <g dangerouslySetInnerHTML={{ __html: customBg.svgContent }} filter="url(#sketch-filter)" />;
+                    return <g dangerouslySetInnerHTML={{ __html: extractSvgInnerMarkup(customBg.svgContent) }} filter="url(#sketch-filter)" />;
                   }
                   
                   return null;
@@ -1475,8 +1514,7 @@ export default function App() {
                                const currentEmotion = el.state.emotion;
                                svgContent = customAsset.emotions[currentEmotion as keyof typeof customAsset.emotions] || customAsset.svgContent;
                             }
-                            // Assuming svgContent is a clean SVG <path>/inner HTML or full SVG tag, we wrap it in a group with filter
-                            return <g dangerouslySetInnerHTML={{ __html: svgContent }} filter="url(#sketch-filter)" />;
+                            return <g dangerouslySetInnerHTML={{ __html: extractSvgInnerMarkup(svgContent) }} filter="url(#sketch-filter)" />;
                           }
                           
                           return null;

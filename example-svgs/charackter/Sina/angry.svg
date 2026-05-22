@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-80 -80 160 210">
+  <defs>
+    <style>
+      .bg-shadow { fill: #e2e8f0; opacity: 0.7; }
+      .outline { fill: none; stroke: #1a1e29; stroke-width: 3.5; stroke-linecap: round; stroke-linejoin: round; }
+      .skin { fill: #fde047; }
+      .hair { fill: #701a75; }
+      .shirt { fill: #111827; }
+      .shirt-pattern { fill: #991b1b; }
+      .pants { fill: #374151; }
+      .boots { fill: #1f2937; }
+      .detail { fill: #1a1e29; }
+    </style>
+  </defs>
+
+  <ellipse cx="0" cy="115" rx="45" ry="8" class="bg-shadow" />
+
+  <g id="legs">
+    <rect x="-22" y="70" width="10" height="35" class="outline" />
+    <rect x="-22" y="70" width="10" height="35" fill="#ffffff" />
+    <rect x="12" y="70" width="10" height="35" class="outline" />
+    <rect x="12" y="70" width="10" height="35" fill="#ffffff" />
+    <path d="M-30,105 L-12,105 L-10,118 L-32,118 Z" class="boots" />
+    <path d="M-30,105 L-12,105 L-10,118 L-32,118 Z" class="outline" />
+    <path d="M12,105 L30,105 L32,118 L10,118 Z" class="boots" />
+    <path d="M12,105 L30,105 L32,118 L10,118 Z" class="outline" />
+  </g>
+
+  <path d="-25,45 L25,45 L20,75 L10,75 L5,60 L-5,60 L-10,75 L-20,75 Z" class="pants" />
+  <path d="-25,45 L25,45 L20,75 L10,75 L5,60 L-5,60 L-10,75 L-20,75 Z" class="outline" />
+
+  <g id="body">
+    <path d="M-22,10 L22,10 L25,45 L-25,45 Z" class="shirt" />
+    <path d="M-22,20 L-10,35 L0,22 L10,35 L22,20 L23,30 L11,45 L0,32 L-11,45 L-23,30 Z" class="shirt-pattern" />
+    <path d="M-22,10 L22,10 L25,45 L-25,45 Z" class="outline" />
+  </g>
+
+  <g id="arms">
+    <path d="M-22,12 C-36,16 -36,30 -24,38" class="outline" />
+    <path d="M22,12 C36,16 36,30 24,38" class="outline" />
+  </g>
+
+  <g id="head">
+    <circle cx="0" cy="-15" r="32" class="skin" />
+    <circle cx="0" cy="-15" r="32" class="outline" />
+    
+    <path d="M-16,-18 L-6,-23" class="outline" />
+    <path d="M6,-23 L16,-18" class="outline" />
+    <circle cx="-11" cy="-13" r="3.5" class="detail" />
+    <circle cx="11" cy="-13" r="3.5" class="detail" />
+    <path d="M-6,6 L6,6 L4,0 L-4,0 Z" class="detail" />
+    <path d="M-6,6 L6,6 L4,0 L-4,0 Z" class="outline" />
+    
+    <path d="M-35,-20 L-25,-45 L-10,-40 L0,-55 L15,-42 L30,-48 L35,-22 L40,-5 L32,5 L28,-15 L-28,-15 L-32,5 L-40,-5 Z" class="hair" />
+    <path d="M-35,-20 L-25,-45 L-10,-40 L0,-55 L15,-42 L30,-48 L35,-22 L40,-5 L32,5 L28,-15 L-28,-15 L-32,5 L-40,-5 Z" class="outline" />
+    <path d="M-20,-28 L-12,-18 L-8,-28 L0,-14 L6,-26 L14,-16 L18,-30" class="hair" />
+    <path d="M-20,-28 L-12,-18 L-8,-28 L0,-14 L6,-26 L14,-16 L18,-30" class="outline" fill="none" />
+  </g>
+</svg>

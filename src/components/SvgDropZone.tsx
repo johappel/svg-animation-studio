@@ -1,4 +1,5 @@
 import React, { useState, useRef } from "react";
+import { createPortal } from "react-dom";
 import { Upload, X, User, Gift, Image as ImageIcon, Smile } from "lucide-react";
 import { CustomAsset, EmotionType } from "../utils/types";
 
@@ -22,11 +23,9 @@ export const SvgDropZone: React.FC<SvgDropZoneProps> = ({ onAssetImported }) => 
     thinking: "",
   });
 
-  const [activeEmotionUpload, setActiveEmotionUpload] = useState<EmotionType | null>(null);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const emotionFileInputRef = useRef<HTMLInputElement>(null);
 
   // XML / HTML XSS Sanitization
   const sanitizeSvg = (svgText: string): string => {
@@ -109,24 +108,18 @@ export const SvgDropZone: React.FC<SvgDropZoneProps> = ({ onAssetImported }) => 
     if (e.target.files && e.target.files[0]) {
       processFile(e.target.files[0]);
     }
+    e.target.value = "";
   };
 
-  const handleEmotionFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0] && activeEmotionUpload) {
-      processFile(e.target.files[0], true, activeEmotionUpload);
-      setActiveEmotionUpload(null);
+  const handleEmotionFileChange = (e: React.ChangeEvent<HTMLInputElement>, emotionKey: EmotionType) => {
+    if (e.target.files && e.target.files[0]) {
+      processFile(e.target.files[0], true, emotionKey);
     }
+    e.target.value = "";
   };
 
   const triggerFileInput = () => {
     fileInputRef.current?.click();
-  };
-
-  const triggerEmotionFileInput = (emotion: EmotionType) => {
-    setActiveEmotionUpload(emotion);
-    setTimeout(() => {
-      emotionFileInputRef.current?.click();
-    }, 50);
   };
 
   const handleSave = () => {
@@ -194,13 +187,6 @@ export const SvgDropZone: React.FC<SvgDropZoneProps> = ({ onAssetImported }) => 
           onChange={handleFileChange}
           className="hidden"
         />
-        <input
-          ref={emotionFileInputRef}
-          type="file"
-          accept=".svg"
-          onChange={handleEmotionFileChange}
-          className="hidden"
-        />
         
         <div className="h-10 w-10 flex items-center justify-center rounded-lg bg-slate-800 border border-slate-700 mb-2 group-hover:scale-110 transition-transform">
           <Upload className="h-5 w-5 text-yellow-500" />
@@ -220,9 +206,9 @@ export const SvgDropZone: React.FC<SvgDropZoneProps> = ({ onAssetImported }) => 
       </div>
 
       {/* Asset Configure Modal */}
-      {isOpen && (
-        <div className="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-slate-900 border border-slate-800 rounded-2xl w-full max-w-2xl overflow-hidden shadow-2xl animate-in fade-in zoom-in-95 duration-200">
+      {isOpen && createPortal(
+        <div className="fixed inset-0 z-[100] bg-slate-950/80 backdrop-blur-sm flex items-start justify-center overflow-y-auto p-4">
+          <div className="my-4 bg-slate-900 border border-slate-800 rounded-2xl w-full max-w-2xl max-h-[calc(100vh-2rem)] overflow-hidden shadow-2xl animate-in fade-in zoom-in-95 duration-200 flex flex-col">
             {/* Modal Header */}
             <div className="flex items-center justify-between px-6 py-4 border-b border-slate-800 bg-slate-950/50">
               <div className="flex items-center gap-2">
@@ -238,7 +224,7 @@ export const SvgDropZone: React.FC<SvgDropZoneProps> = ({ onAssetImported }) => 
             </div>
 
             {/* Modal Body */}
-            <div className="p-6 space-y-6 max-h-[70vh] overflow-y-auto">
+            <div className="flex-1 min-h-0 overflow-y-auto p-6 space-y-6">
               
               {errorMsg && (
                 <div className="p-3 text-xs text-red-400 font-semibold bg-red-950/30 border border-red-900/30 rounded-lg">
@@ -344,18 +330,22 @@ export const SvgDropZone: React.FC<SvgDropZoneProps> = ({ onAssetImported }) => 
                             {em.label.split(" ")[0]}
                           </span>
 
-                          <button
-                            type="button"
-                            onClick={() => triggerEmotionFileInput(em.id as EmotionType)}
-                            disabled={isMain && !!mainSvg}
+                          <label
                             className={`w-full mt-2 rounded py-1 text-[9px] font-bold text-center cursor-pointer transition-colors ${
                               hasSvg
                                 ? "bg-emerald-900/30 hover:bg-emerald-900/50 text-emerald-400 border border-emerald-800"
                                 : "bg-slate-800 hover:bg-slate-700 text-slate-300"
                             } ${isMain ? "opacity-50 cursor-not-allowed" : ""}`}
                           >
+                            <input
+                              type="file"
+                              accept=".svg"
+                              onChange={(e) => handleEmotionFileChange(e, em.id as EmotionType)}
+                              disabled={isMain && !!mainSvg}
+                              className="sr-only"
+                            />
                             {hasSvg ? "Ersetzen" : "Hinzufügen"}
-                          </button>
+                          </label>
                         </div>
                       );
                     })}
@@ -366,7 +356,7 @@ export const SvgDropZone: React.FC<SvgDropZoneProps> = ({ onAssetImported }) => 
             </div>
 
             {/* Modal Footer */}
-            <div className="px-6 py-4 border-t border-slate-800 bg-slate-950/50 flex justify-end gap-3">
+            <div className="shrink-0 px-6 py-4 border-t border-slate-800 bg-slate-950/50 flex justify-end gap-3">
               <button
                 type="button"
                 onClick={resetForm}
@@ -383,7 +373,8 @@ export const SvgDropZone: React.FC<SvgDropZoneProps> = ({ onAssetImported }) => 
               </button>
             </div>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </div>
   );
