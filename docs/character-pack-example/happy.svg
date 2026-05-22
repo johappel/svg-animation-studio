@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-80 -80 160 210">
+  <g class="mika-happy">
+    <ellipse cx="0" cy="115" rx="58" ry="10" fill="#E2E8F0" />
+
+    <path d="M -26,95 L -38,113 H -17 C -11,113 -11,95 -16,95" fill="#4B5563" stroke="#0F172A" stroke-width="3" stroke-linejoin="round" />
+    <path d="M 12,95 L 24,113 H 38 C 44,113 44,95 31,95" fill="#4B5563" stroke="#0F172A" stroke-width="3" stroke-linejoin="round" />
+    <rect x="-27" y="72" width="10" height="23" fill="#F8FAFC" stroke="#0F172A" stroke-width="3" />
+    <rect x="16" y="72" width="10" height="23" fill="#F8FAFC" stroke="#0F172A" stroke-width="3" />
+
+    <path d="M -30,50 H 30 V 73 H 10 L 4,62 H -4 L -10,73 H -30 Z" fill="#334155" stroke="#0F172A" stroke-width="3" stroke-linejoin="round" />
+    <path d="M -34,14 L -38,50 H 38 L 34,14 C 20,8 -20,8 -34,14 Z" fill="#14B8A6" stroke="#0F172A" stroke-width="3.5" stroke-linejoin="round" />
+    <path d="M -34,34 L -18,28 L -3,34 L 12,28 L 28,34" fill="none" stroke="#0F172A" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" />
+
+    <path d="M -33,23 Q -43,42 -36,54" fill="none" stroke="#0F172A" stroke-width="3.5" stroke-linecap="round" />
+    <path d="M 33,23 Q 43,42 36,54" fill="none" stroke="#0F172A" stroke-width="3.5" stroke-linecap="round" />
+
+    <rect x="-7" y="-1" width="14" height="18" fill="#FED7AA" stroke="#0F172A" stroke-width="3.5" />
+    <circle cx="0" cy="-29" r="39" fill="#FED7AA" stroke="#0F172A" stroke-width="3.5" />
+    <path d="M -10,-63 Q 0,-70 12,-61" fill="none" stroke="#0F172A" stroke-width="3" stroke-linecap="round" />
+    <path d="M -36,-34 Q -41,-30 -37,-24" fill="none" stroke="#0F172A" stroke-width="2.8" stroke-linecap="round" />
+    <path d="M 36,-34 Q 41,-30 37,-24" fill="none" stroke="#0F172A" stroke-width="2.8" stroke-linecap="round" />
+
+    <path d="M -18,-44 Q -12,-46 -6,-44" fill="none" stroke="#0F172A" stroke-width="3" stroke-linecap="round" />
+    <path d="M 6,-44 Q 12,-46 18,-44" fill="none" stroke="#0F172A" stroke-width="3" stroke-linecap="round" />
+    <circle cx="-12" cy="-34" r="3" fill="#0F172A" />
+    <circle cx="12" cy="-34" r="3" fill="#0F172A" />
+    <path d="M -3,-28 Q 2,-25 -1,-20" fill="none" stroke="#0F172A" stroke-width="3" stroke-linecap="round" />
+    <path d="M -12,-14 Q 0,-4 12,-14" fill="none" stroke="#0F172A" stroke-width="3.5" stroke-linecap="round" />
+  </g>
+</svg>

@@ -1,0 +1,30 @@
+{
+  "id": "mika",
+  "name": "Mika",
+  "type": "character",
+  "version": 1,
+  "defaultEmotion": "happy",
+  "viewBox": "-80 -80 160 210",
+  "files": {
+    "happy": "happy.svg",
+    "sad": "sad.svg",
+    "angry": "angry.svg",
+    "surprised": "surprised.svg",
+    "thinking": "thinking.svg"
+  },
+  "import": {
+    "main": "happy.svg",
+    "emotions": {
+      "happy": "happy.svg",
+      "sad": "sad.svg",
+      "angry": "angry.svg",
+      "surprised": "surprised.svg",
+      "thinking": "thinking.svg"
+    }
+  },
+  "stage": {
+    "defaultScale": 1.3,
+    "anchor": "bottom-center"
+  },
+  "tags": ["example", "character-pack", "custom-asset"]
+}
