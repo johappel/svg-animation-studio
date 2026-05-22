@@ -1,5 +1,5 @@
 import React, { useState, useRef } from "react";
-import { Upload, X, User, Gift, Image as ImageIcon, Smile, Eye } from "lucide-react";
+import { Upload, X, User, Gift, Image as ImageIcon, Smile } from "lucide-react";
 import { CustomAsset, EmotionType } from "../utils/types";
 
 interface SvgDropZoneProps {

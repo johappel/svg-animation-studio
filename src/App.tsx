@@ -39,18 +39,18 @@ import {
   DoghouseProp,
   TreeProp,
   FootballProp,
-  CookieProp,
-  BackgroundRenderer
+  CookieProp
 } from "./components/SnoopyAssets";
 import { SvgDropZone } from "./components/SvgDropZone";
-import { getCustomAssetsFromDB, saveCustomAssetToDB } from "./utils/db";
+import { saveCustomAssetToDB } from "./utils/db";
 
 import {
   Project,
   Scene,
   SceneElement,
   Keyframe,
-  ElementState
+  ElementState,
+  EmotionType
 } from "./utils/types";
 
 import {
@@ -1064,6 +1064,18 @@ export default function App() {
             </button>
           </div>
 
+          {/* CUSTOM SVG DROP ZONE */}
+          <div className="p-4 pb-0">
+            <SvgDropZone onAssetImported={async (newAsset) => {
+              // Add to project
+              const updatedAssets = [...(project.custom_assets || []), newAsset];
+              setProject(prev => ({ ...prev, custom_assets: updatedAssets }));
+              
+              // Persist to DB directly automatically since IndexedDB ensures they are saved across reloads
+              await saveCustomAssetToDB(newAsset);
+            }} />
+          </div>
+
           <div className="flex-1 overflow-y-auto p-4 space-y-4">
             {/* CHARACTER TAB */}
             {activeLeftTab === "characters" && (
@@ -1102,6 +1114,28 @@ export default function App() {
                     </button>
                   ))}
                 </div>
+                
+                {project.custom_assets && project.custom_assets.filter(a => a.type === "character").length > 0 && (
+                  <div className="pt-4 mt-4 border-t border-slate-800">
+                    <h4 className="text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-3">Eigene Figuren</h4>
+                    <div className="grid grid-cols-2 gap-3">
+                      {project.custom_assets.filter(a => a.type === "character").map(char => (
+                        <button
+                          key={char.id}
+                          onClick={() => handleAddElement(char.id, "character")}
+                          className="group flex flex-col items-center justify-between rounded-xl border border-slate-800 bg-slate-900 p-3 text-center transition-all hover:-translate-y-0.5 hover:border-yellow-500 hover:shadow-lg hover:shadow-yellow-500/10 cursor-pointer"
+                        >
+                          <div className="h-20 w-20 flex items-center justify-center rounded-lg bg-slate-800/50 border border-slate-700/50 overflow-hidden mb-2">
+                             <svg viewBox="0 0 100 100" className="w-16 h-16">
+                               <g dangerouslySetInnerHTML={{ __html: char.svgContent }} filter="url(#sketch-filter)" />
+                             </svg>
+                          </div>
+                          <span className="block text-xs font-semibold text-slate-200 group-hover:text-yellow-500 truncate w-full">{char.name}</span>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
             )}
 
@@ -1135,6 +1169,28 @@ export default function App() {
                     </button>
                   ))}
                 </div>
+
+                {project.custom_assets && project.custom_assets.filter(a => a.type === "prop").length > 0 && (
+                  <div className="pt-4 mt-4 border-t border-slate-800">
+                    <h4 className="text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-3">Eigene Requisiten</h4>
+                    <div className="grid grid-cols-2 gap-3">
+                      {project.custom_assets.filter(a => a.type === "prop").map(prop => (
+                        <button
+                          key={prop.id}
+                          onClick={() => handleAddElement(prop.id, "prop")}
+                          className="group flex flex-col items-center justify-between rounded-xl border border-slate-800 bg-slate-900 p-3 text-center transition-all hover:-translate-y-0.5 hover:border-yellow-500 hover:shadow-lg hover:shadow-yellow-500/10 cursor-pointer"
+                        >
+                          <div className="h-20 w-20 flex items-center justify-center rounded-lg bg-slate-800/50 border border-slate-700/50 overflow-hidden mb-2">
+                             <svg viewBox="0 0 100 100" className="w-16 h-16">
+                               <g dangerouslySetInnerHTML={{ __html: prop.svgContent }} filter="url(#sketch-filter)" />
+                             </svg>
+                          </div>
+                          <span className="block text-xs font-semibold text-slate-200 group-hover:text-yellow-500 truncate w-full">{prop.name}</span>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
             )}
 
@@ -1160,7 +1216,10 @@ export default function App() {
                     >
                       <div className="h-12 w-20 flex-shrink-0 rounded bg-slate-800 border border-slate-700/50 overflow-hidden">
                         <svg viewBox="0 0 1920 1080" className="h-full w-full">
-                          <BackgroundRenderer backgroundId={bg.id} />
+                        {(() => {
+                          const BgComp = BACKGROUND_REGISTRY[bg.id];
+                          return BgComp ? <BgComp /> : null;
+                        })()}
                         </svg>
                       </div>
                       <div className="overflow-hidden">
@@ -1170,6 +1229,35 @@ export default function App() {
                     </button>
                   ))}
                 </div>
+
+                {project.custom_assets && project.custom_assets.filter(a => a.type === "background").length > 0 && (
+                  <div className="pt-4 mt-4 border-t border-slate-800">
+                    <h4 className="text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-3">Eigene Hintergründe</h4>
+                    <div className="grid grid-cols-1 gap-3">
+                      {project.custom_assets.filter(a => a.type === "background").map(bg => (
+                        <button
+                          key={bg.id}
+                          onClick={() => handleUpdateSceneProperties({ background_id: bg.id })}
+                          className={`group flex items-center gap-3 rounded-xl border p-2.5 text-left transition-all ${
+                            activeScene.background_id === bg.id
+                              ? "border-yellow-500 bg-yellow-500/10 shadow"
+                              : "border-slate-800 bg-slate-900 hover:border-slate-700"
+                          } cursor-pointer`}
+                        >
+                          <div className="h-12 w-20 flex-shrink-0 rounded bg-slate-800 border border-slate-700/50 overflow-hidden">
+                            <svg viewBox="0 0 1920 1080" className="w-full h-full">
+                              <g dangerouslySetInnerHTML={{ __html: bg.svgContent }} filter="url(#sketch-filter)" />
+                            </svg>
+                          </div>
+                          <div className="overflow-hidden">
+                            <span className="block text-xs font-semibold text-slate-200 group-hover:text-yellow-500 truncate">{bg.name}</span>
+                            <span className="block text-[10px] text-slate-500 mt-0.5 truncate">Benutzerdefiniert</span>
+                          </div>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
             )}
 
@@ -1321,7 +1409,17 @@ export default function App() {
                 <SketchFilter />
 
                 {/* BACKGROUND LAYER */}
-                <BackgroundRenderer backgroundId={activeScene.background_id} />
+                {(() => {
+                  const BgComp = BACKGROUND_REGISTRY[activeScene.background_id];
+                  if (BgComp) return <BgComp />;
+                  
+                  const customBg = project.custom_assets?.find(a => a.id === activeScene.background_id && a.type === "background");
+                  if (customBg) {
+                    return <g dangerouslySetInnerHTML={{ __html: customBg.svgContent }} filter="url(#sketch-filter)" />;
+                  }
+                  
+                  return null;
+                })()}
 
                 {/* GRID OR GUIDE LINES */}
                 {showGuideLines && (
@@ -1358,23 +1456,31 @@ export default function App() {
                         className="cursor-grab active:cursor-grabbing"
                       >
                         {/* Dynamic Render based on Asset ID */}
-                        {el.asset_id === "char_snoopy" && (
-                          <SnoopyCharacter emotion={el.state.emotion} wearables={el.state.wearables} isAngryActive={el.state.emotion === "angry"} />
-                        )}
-                        {el.asset_id === "char_charlie" && (
-                          <CharlieCharacter emotion={el.state.emotion} wearables={el.state.wearables} isAngryActive={el.state.emotion === "angry"} />
-                        )}
-                        {el.asset_id === "char_lucy" && (
-                          <LucyCharacter emotion={el.state.emotion} wearables={el.state.wearables} isAngryActive={el.state.emotion === "angry"} />
-                        )}
-                        {el.asset_id === "char_woodstock" && (
-                          <WoodstockCharacter emotion={el.state.emotion} wearables={el.state.wearables} isAngryActive={el.state.emotion === "angry"} />
-                        )}
-
-                        {el.asset_id === "prop_doghouse" && <DoghouseProp />}
-                        {el.asset_id === "prop_tree" && <TreeProp />}
-                        {el.asset_id === "prop_football" && <FootballProp />}
-                        {el.asset_id === "prop_cookie" && <CookieProp />}
+                        {(() => {
+                          const CharacterComponent = CHARACTER_REGISTRY[el.asset_id];
+                          const PropComponent = PROP_REGISTRY[el.asset_id];
+                          
+                          if (CharacterComponent) {
+                            return <CharacterComponent emotion={el.state.emotion} wearables={el.state.wearables} isAngryActive={el.state.emotion === "angry"} />;
+                          }
+                          if (PropComponent) {
+                            return <PropComponent />;
+                          }
+                          
+                          // Custom Asset
+                          const customAsset = project.custom_assets?.find(a => a.id === el.asset_id);
+                          if (customAsset) {
+                            let svgContent = customAsset.svgContent;
+                            if (el.type === "character" && customAsset.emotions) {
+                               const currentEmotion = el.state.emotion;
+                               svgContent = customAsset.emotions[currentEmotion as keyof typeof customAsset.emotions] || customAsset.svgContent;
+                            }
+                            // Assuming svgContent is a clean SVG <path>/inner HTML or full SVG tag, we wrap it in a group with filter
+                            return <g dangerouslySetInnerHTML={{ __html: svgContent }} filter="url(#sketch-filter)" />;
+                          }
+                          
+                          return null;
+                        })()}
 
                         {/* Selected Outline Bounding Box */}
                         {isSelected && (

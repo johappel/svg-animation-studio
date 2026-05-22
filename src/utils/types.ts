@@ -1,5 +1,12 @@
 export type EmotionType = "happy" | "sad" | "angry" | "surprised" | "thinking";
 
+export interface CustomAsset {
+  id: string;
+  name: string;
+  type: "character" | "prop" | "background";
+  svgContent: string;
+}
+
 export interface Keyframe {
   time_sec: number;
   x: number;

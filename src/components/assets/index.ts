@@ -38,10 +38,10 @@ export interface CharacterComponentProps {
 }
 
 export const CHARACTER_REGISTRY: Record<string, React.FC<CharacterComponentProps>> = {
-  base_snoopy: Snoopy,
-  base_charlie: Charlie,
-  base_lucy: Lucy,
-  base_woodstock: Woodstock,
+  char_snoopy: Snoopy,
+  char_charlie: Charlie,
+  char_lucy: Lucy,
+  char_woodstock: Woodstock,
 };
 
 export const PROP_REGISTRY: Record<string, React.FC> = {
