@@ -25,6 +25,13 @@ import {
 import gsap from "gsap";
 
 import {
+  CHARACTER_REGISTRY,
+  PROP_REGISTRY,
+  BACKGROUND_REGISTRY,
+  SpeechBubble,
+  SketchFilter
+} from "./components/assets";
+import {
   SnoopyCharacter,
   CharlieCharacter,
   LucyCharacter,
@@ -33,11 +40,10 @@ import {
   TreeProp,
   FootballProp,
   CookieProp,
-  BackgroundRenderer,
-  SpeechBubble,
-  SketchFilter,
-  EmotionType
+  BackgroundRenderer
 } from "./components/SnoopyAssets";
+import { SvgDropZone } from "./components/SvgDropZone";
+import { getCustomAssetsFromDB, saveCustomAssetToDB } from "./utils/db";
 
 import {
   Project,

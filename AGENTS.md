@@ -21,6 +21,14 @@ The entire application state must be centralized and serializable. Every UI inte
 {
   "project_name": "Schulhof-Streit v1",
   "meta": { "width": 1920, "height": 1080, "fps": 30 },
+  "custom_assets": [
+    {
+      "id": "custom_prop_balloon",
+      "name": "Roter Ballon",
+      "type": "prop",
+      "svgContent": "<path d='M... Z' fill='#EF4444' />"
+    }
+  ],
   "timeline": [
     {
       "scene_id": "scene_1",
@@ -40,8 +48,8 @@ The entire application state must be centralized and serializable. Every UI inte
             "wearables": ["prop_cap_red"]
           },
           "keyframes": [
-            { "time_sec": 0.0, "type": "move", "x": 400, "y": 600 },
-            { "time_sec": 2.0, "type": "move", "x": 600, "y": 600 }
+            { "time_sec": 0.0, "x": 400, "y": 600 },
+            { "time_sec": 2.0, "x": 600, "y": 600 }
           ]
         }
       ]

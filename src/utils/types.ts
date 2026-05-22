@@ -1,4 +1,4 @@
-import { EmotionType } from "../components/SnoopyAssets";
+export type EmotionType = "happy" | "sad" | "angry" | "surprised" | "thinking";
 
 export interface Keyframe {
   time_sec: number;
@@ -51,6 +51,20 @@ export interface Scene {
   elements: SceneElement[];
 }
 
+export interface CustomAsset {
+  id: string;
+  name: string;
+  type: "character" | "prop" | "background";
+  svgContent: string; // Standard-SVG (happy)
+  emotions?: {
+    happy?: string;
+    sad?: string;
+    angry?: string;
+    surprised?: string;
+    thinking?: string;
+  };
+}
+
 export interface Project {
   project_name: string;
   meta: {
@@ -59,4 +73,5 @@ export interface Project {
     fps: number;
   };
   timeline: Scene[];
+  custom_assets?: CustomAsset[];
 }
